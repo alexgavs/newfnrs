@@ -22,6 +22,7 @@
 
 ## Поддерживаемые устройства / Supported Devices
 
+- **FNIRSI IPS3608** (36V / 8.2A) — протестировано / tested ✓
 - FNIRSI DPS-150 / FNB58
 - Другие модели FNIRSI с аналогичным протоколом
 
@@ -78,8 +79,22 @@ python cli.py
 - `on` - Включить выход
 - `off` - Выключить выход
 - `r` - Обновить данные
-- `m` - Мониторинг (5 сек)
-- `q` - Выход
+
+### 🖥️ Графический интерфейс / GUI
+
+```bash
+pip install matplotlib
+python gui.py
+```
+
+Возможности GUI:
+- 📊 **Графики в реальном времени** — напряжение, ток, мощность, температура
+- 🎚️ **Слайдеры** для быстрой настройки V/A
+- ⚡ **Настраиваемые пресеты** — сетка 3×3, ЛКМ применить / ПКМ настроить
+- 🔆 **Яркость дисплея** — настройка 0-20
+- 💾 **Запись данных** — экспорт в CSV
+- 📸 **Скриншоты графиков** — сохранение в PNG
+- ⚙️ **Настройки** — порт, скорость, защиты, интервал обновления
 
 ## Протокол / Protocol
 
@@ -102,8 +117,10 @@ Checksum = (register + length + sum(data)) & 0xFF
 | `fnirsi.py` | Основная библиотека / Main library |
 | `controller.py` | Высокоуровневый контроллер / High-level controller |
 | `protocol.py` | Реализация протокола / Protocol implementation |
+| `gui.py` | 🖥️ Графический интерфейс с графиками / GUI with charts |
 | `cli.py` | Интерактивный CLI / Interactive CLI |
 | `serial_port.py` | Работа с COM-портом / COM port handling |
+| `config.json` | ⚙️ Конфигурация и пресеты / Config and presets |
 | `scan_ports.py` | Сканирование портов / Port scanning |
 | `examples.py` | Примеры использования / Usage examples |
 

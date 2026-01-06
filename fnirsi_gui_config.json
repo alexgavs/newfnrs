@@ -1,0 +1,14 @@
+{
+  "baud_rate": 9600,
+  "timeout": 2.0,
+  "auto_reconnect": true,
+  "max_chart_points": 300,
+  "update_interval": 200,
+  "show_grid": true,
+  "ovp_limit": 0,
+  "ocp_limit": 0,
+  "opp_limit": 0,
+  "theme": "default",
+  "language": "ru",
+  "last_port": "COM11"
+}

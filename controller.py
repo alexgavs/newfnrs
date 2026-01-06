@@ -30,6 +30,7 @@ class Register(IntEnum):
     """Регистры устройства"""
     # Настройки
     BAUD_RATE = 0x00
+    BRIGHTNESS = 0xD6   # Яркость дисплея (0-35)
     
     # Установка значений
     SET_VOLTAGE = 0xC1  # Установить напряжение (через 0xB1)
@@ -218,6 +219,12 @@ class Commands:
     def set_baud_rate(index: int) -> bytes:
         """Установить скорость порта (1=9600, 2=19200...)"""
         return make_command(CmdType.WRITE_FLOAT, Register.BAUD_RATE, bytes([index]))
+    
+    @staticmethod
+    def set_brightness(level: int) -> bytes:
+        """Установить яркость дисплея (0-20)"""
+        level = max(0, min(20, level))
+        return make_command(CmdType.WRITE_BYTE, 0xD6, bytes([level]))
 
 
 # =============================================================================
@@ -267,8 +274,8 @@ class ResponseParser:
             state.capacity_wh = bytes_to_float(payload, 0)
             
         elif register == 0xDB:  # 219 - состояние выхода
-            # 0 = ON, 1 = OFF (инвертировано)
-            state.output_enabled = (payload[0] == 0)
+            # 1 = ON, 0 = OFF
+            state.output_enabled = (payload[0] == 1)
             
         elif register == 0xDC:  # 220 - статус защиты
             state.protection = payload[0]
@@ -297,17 +304,17 @@ class ResponseParser:
     @staticmethod
     def _parse_all(payload: bytes, state: PowerSupplyState):
         """Разбор пакета 0xFF (все параметры)"""
-        if len(payload) < 119:
+        if len(payload) < 85:
             return
         
-        # Основные данные
-        state.input_voltage = bytes_to_float(payload, 0)
-        state.set_voltage = bytes_to_float(payload, 4)
-        state.set_current = bytes_to_float(payload, 8)
-        state.output_voltage = bytes_to_float(payload, 12)
-        state.output_current = bytes_to_float(payload, 16)
-        state.output_power = bytes_to_float(payload, 20)
-        state.temperature = bytes_to_float(payload, 24)
+        # Основные данные (проверено анализом)
+        state.input_voltage = bytes_to_float(payload, 0)   # Входное напряжение
+        state.set_voltage = bytes_to_float(payload, 4)     # Уставка V
+        state.set_current = bytes_to_float(payload, 8)     # Уставка A
+        state.output_voltage = bytes_to_float(payload, 12) # Измерение V
+        state.output_current = bytes_to_float(payload, 16) # Измерение A
+        state.output_power = bytes_to_float(payload, 20)   # Измерение W
+        state.temperature = bytes_to_float(payload, 24)    # Температура
         
         # Пресеты (6 пар по 8 байт, начиная с offset 28)
         presets = []
@@ -317,16 +324,24 @@ class ResponseParser:
             presets.append((v, a))
         state.presets = presets
         
-        # Статусы
-        state.capacity_ah = bytes_to_float(payload, 99)
-        state.capacity_wh = bytes_to_float(payload, 103)
-        state.output_enabled = (payload[107] == 0)
-        state.protection = payload[108]
-        state.mode = payload[109]
+        # Лимиты устройства (offset 76, 80)
+        state.max_voltage = bytes_to_float(payload, 76)
+        state.max_current = bytes_to_float(payload, 80)
         
-        # Лимиты
-        state.max_voltage = bytes_to_float(payload, 111)
-        state.max_current = bytes_to_float(payload, 115)
+        # Лимиты защит (offset 84, 88, 92)
+        # OPP = bytes_to_float(payload, 84)  # ~295W
+        # OVP = bytes_to_float(payload, 88)  # 60V
+        # OCP = bytes_to_float(payload, 92)  # 40A
+        
+        # Capacity (offset 96-103)
+        # Данные могут быть смещены, нужно проверить
+        
+        # Статусы (offset 107, 108, 109)
+        # output_enabled на offset 107 - подтверждено мониторингом
+        if len(payload) > 109:
+            state.output_enabled = (payload[107] == 1)
+            state.mode = payload[108]
+            state.protection = payload[109]
 
 
 # =============================================================================
@@ -408,13 +423,16 @@ class FnirsiController:
                 parity='N',
                 stopbits=1,
                 timeout=0.5,
-                write_timeout=None
+                write_timeout=1.0
             )
-            self._port.rts = True
-            self._port.dtr = True
-            time.sleep(0.1)
-            self._port.reset_input_buffer()
-            self._port.reset_output_buffer()
+            time.sleep(0.5)
+            
+            # Очистка буферов (с обработкой ошибок)
+            try:
+                self._port.reset_input_buffer()
+                self._port.reset_output_buffer()
+            except:
+                pass
             self._buffer.clear()
             
             # Запуск потока чтения
@@ -516,6 +534,12 @@ class FnirsiController:
         """
         return self._send(Commands.OUTPUT_OFF)
     
+    def set_brightness(self, level: int) -> bool:
+        """
+        Установить яркость дисплея (0-35)
+        """
+        return self._send(Commands.set_brightness(level))
+
     def read_all(self) -> bool:
         """Запросить все параметры"""
         return self._send(Commands.READ_ALL)

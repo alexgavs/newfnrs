@@ -140,6 +140,7 @@ Flow Control: None
 | `0xC2` | PRESET_A1 | R/W | Пресет 1 ток | Preset 1 current |
 | `0xC3` | LIVE_VALUES | R | Текущие V, A, W | Live V, A, W readings |
 | `0xC4` | TEMPERATURE | R | Температура | Temperature |
+| `0xD6` | BRIGHTNESS | R/W | Яркость дисплея (0-20) | Display brightness (0-20) |
 | `0xD9` | CAPACITY_AH | R | Ёмкость (Ah) | Capacity (Ah) |
 | `0xDA` | CAPACITY_WH | R | Ёмкость (Wh) | Capacity (Wh) |
 | `0xDB` | OUTPUT_STATE | R/W | Состояние выхода | Output state |
@@ -170,10 +171,10 @@ Flow Control: None
 
 | Значение | Состояние |
 |----------|-----------|
-| `0x00` | Выход ВКЛЮЧЕН (ON) |
-| `0x01` | Выход ВЫКЛЮЧЕН (OFF) |
+| `0x00` | Выход ВЫКЛЮЧЕН (OFF) |
+| `0x01` | Выход ВКЛЮЧЕН (ON) |
 
-**Примечание:** Логика инвертирована! 0 = ВКЛ, 1 = ВЫКЛ.
+**Примечание:** Отправить 0x01 = включить выход, 0x00 = выключить.
 
 ---
 
@@ -343,6 +344,20 @@ TX: F1 B1 DB 01 01 DD
 TX: F1 B1 DB 01 00 DC
 ```
 
+### Установить яркость дисплея / Set Display Brightness
+
+```
+TX: F1 B1 D6 01 0A E1
+    │  │  │  │  │  └─ Checksum: (0xD6 + 0x01 + 0x0A) & 0xFF = 0xE1
+    │  │  │  │  └──── Data: 0x0A (10 = середина диапазона)
+    │  │  │  └─────── Length: 1
+    │  │  └────────── Register: 0xD6 (BRIGHTNESS)
+    │  └───────────── CmdType: 0xB1 (WRITE_BYTE)
+    └──────────────── Header: 0xF1
+
+Диапазон: 0 (минимум) — 20 (максимум)
+```
+
 ---
 
 ## Структура ответа 0xFF / Response 0xFF Structure
@@ -364,19 +379,23 @@ TX: F1 B1 DB 01 00 DC
 | 32 | 4 | Preset 1 Current | float |
 | 36 | 4 | Preset 2 Voltage | float |
 | 40 | 4 | Preset 2 Current | float |
-| ... | ... | ... | ... |
-| 96 | 1 | Preset Index | byte |
-| 99 | 4 | Capacity Ah | float |
-| 103 | 4 | Capacity Wh | float |
-| 107 | 1 | Output Enabled | byte (0=ON, 1=OFF) |
-| 108 | 1 | Protection Status | byte |
-| 109 | 1 | Mode (CV/CC) | byte |
-| 111 | 4 | Max Voltage | float |
-| 115 | 4 | Max Current | float |
-| 119 | 4 | OVP Limit | float |
-| 123 | 4 | OCP Limit | float |
-| 127 | 4 | OPP Limit | float |
-| 131 | 4 | OTP Limit | float |
+| 44 | 4 | Preset 3 Voltage | float |
+| 48 | 4 | Preset 3 Current | float |
+| 52 | 4 | Preset 4 Voltage | float |
+| 56 | 4 | Preset 4 Current | float |
+| 60 | 4 | Preset 5 Voltage | float |
+| 64 | 4 | Preset 5 Current | float |
+| 68 | 4 | Preset 6 Voltage | float |
+| 72 | 4 | Preset 6 Current | float |
+| 76 | 4 | Max Voltage | float |
+| 80 | 4 | Max Current | float |
+| 84 | 4 | OPP Limit | float |
+| 88 | 4 | OVP Limit | float |
+| 92 | 4 | OCP Limit | float |
+| 96-103 | 8 | Capacity (Ah, Wh) | float×2 |
+| 107 | 1 | Output Enabled | byte (0=OFF, 1=ON) |
+| 108 | 1 | Mode (CV/CC) | byte (0=CV, 1=CC) |
+| 109 | 1 | Protection Status | byte |
 
 ---
 
@@ -487,7 +506,7 @@ RX: F0 C1 00 01 00 01
 
 1. **Порядок байт:** Все многобайтовые значения передаются в формате little-endian.
 
-2. **Инвертированная логика OUTPUT_STATE:** 0 = ВКЛ, 1 = ВЫКЛ (необычно, но так работает).
+2. **OUTPUT_STATE:** 0x01 = ВКЛ, 0x00 = ВЫКЛ.
 
 3. **Регистр 0xDE:** Имеет двойное назначение — запись тока и чтение модели устройства.
 
