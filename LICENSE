@@ -1,77 +1,63 @@
-CUSTOM LICENSE - ATTRIBUTION REQUIRED
-======================================
+MIT License with Attribution Requirement
+========================================
 
 Copyright (c) 2024-2026 ALEXGAVS
 
 РУССКАЯ ВЕРСИЯ
 --------------
 
-Настоящим предоставляется разрешение любому лицу, получившему копию данного 
-программного обеспечения и сопутствующей документации (далее — «Программное 
-обеспечение»), использовать Программное обеспечение ТОЛЬКО при соблюдении 
-следующих условий:
+Настоящим предоставляется бесплатное разрешение любому лицу, получившему 
+копию данного программного обеспечения и сопутствующей документации 
+(далее — «Программное обеспечение»), совершать с Программным обеспечением 
+любые действия без ограничений, включая без ограничения права на 
+использование, копирование, модификацию, объединение, публикацию, 
+распространение, сублицензирование и/или продажу копий Программного 
+обеспечения, а также разрешать лицам, которым предоставляется Программное 
+обеспечение, делать то же самое, при соблюдении следующих условий:
 
-1. ОБЯЗАТЕЛЬНОЕ УКАЗАНИЕ АВТОРСТВА
+1. УКАЗАНИЕ АВТОРСТВА
 
-   При любом использовании, копировании, модификации, объединении, публикации, 
-   распространении, сублицензировании и/или продаже копий Программного 
-   обеспечения ОБЯЗАТЕЛЬНО должна быть сохранена ссылка на оригинального 
-   автора ALEXGAVS в виде:
+   Вышеуказанное уведомление об авторских правах и данное уведомление о 
+   разрешении должны быть включены во все копии или существенные части 
+   Программного обеспечения.
    
-   - Упоминания в исходном коде
-   - Упоминания в документации
-   - Упоминания в пользовательском интерфейсе (если применимо)
+   При публичном использовании или распространении рекомендуется указывать:
+   - Ссылку на оригинального автора ALEXGAVS
+   - Ссылку на оригинальный репозиторий (если доступен)
 
-2. ЗАПРЕТ НА УДАЛЕНИЕ АВТОРСТВА
+2. ПРОИЗВОДНЫЕ РАБОТЫ
 
-   Удаление, сокрытие или изменение информации об авторе ALEXGAVS 
-   категорически запрещено.
-
-3. ПРОИЗВОДНЫЕ РАБОТЫ
-
-   Любые производные работы должны также содержать указание на оригинального 
-   автора ALEXGAVS и ссылку на оригинальный репозиторий.
-
-4. КОММЕРЧЕСКОЕ ИСПОЛЬЗОВАНИЕ
-
-   Коммерческое использование разрешено только при явном указании 
-   авторства ALEXGAVS.
+   Производные работы должны сохранять уведомление об авторских правах 
+   и могут добавлять собственные уведомления об авторстве.
 
 
 ENGLISH VERSION
 ---------------
 
-Permission is hereby granted to any person obtaining a copy of this software 
-and associated documentation files (the "Software"), to use the Software 
-ONLY under the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
 
-1. MANDATORY ATTRIBUTION
+1. ATTRIBUTION
 
-   Any use, copying, modification, merging, publishing, distribution, 
-   sublicensing, and/or selling of copies of the Software MUST include 
-   a reference to the original author ALEXGAVS in the form of:
+   The above copyright notice and this permission notice shall be included 
+   in all copies or substantial portions of the Software.
    
-   - Mention in source code
-   - Mention in documentation  
-   - Mention in user interface (if applicable)
+   When publicly using or distributing, it is recommended to include:
+   - A reference to the original author ALEXGAVS
+   - A link to the original repository (if available)
 
-2. PROHIBITION OF ATTRIBUTION REMOVAL
+2. DERIVATIVE WORKS
 
-   Removal, concealment, or alteration of author information ALEXGAVS 
-   is strictly prohibited.
-
-3. DERIVATIVE WORKS
-
-   Any derivative works must also contain attribution to the original 
-   author ALEXGAVS and a link to the original repository.
-
-4. COMMERCIAL USE
-
-   Commercial use is permitted only with explicit attribution to ALEXGAVS.
+   Derivative works must retain the copyright notice and may add their 
+   own attribution notices.
 
 
-DISCLAIMER
-----------
+DISCLAIMER / ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ
+-------------------------------------
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
@@ -81,9 +67,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 THE SOFTWARE.
 
+ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, 
+ЯВНЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ, ГАРАНТИЯМИ ТОВАРНОЙ 
+ПРИГОДНОСТИ, СООТВЕТСТВИЯ ОПРЕДЕЛЁННОЙ ЦЕЛИ И НЕНАРУШЕНИЯ ПРАВ. НИ ПРИ КАКИХ 
+ОБСТОЯТЕЛЬСТВАХ АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ ОТВЕТСТВЕННОСТИ ЗА ЛЮБЫЕ 
+ПРЕТЕНЗИИ, УБЫТКИ ИЛИ ИНУЮ ОТВЕТСТВЕННОСТЬ, ВОЗНИКШУЮ В РЕЗУЛЬТАТЕ 
+ИСПОЛЬЗОВАНИЯ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫХ ДЕЙСТВИЙ С НИМ.
+
 ================================================================================
-
-ИСПОЛЬЗОВАНИЕ ДАННОГО КОДА БЕЗ УКАЗАНИЯ АВТОРСТВА ALEXGAVS ЗАПРЕЩЕНО!
-USE OF THIS CODE WITHOUT ATTRIBUTION TO ALEXGAVS IS PROHIBITED!
-
+Original Author / Оригинальный автор: ALEXGAVS
 ================================================================================

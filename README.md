@@ -1,7 +1,7 @@
 # FNIRSI Power Supply Python Library
 
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Custom-red.svg)](#license)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Описание / Description
 
@@ -141,40 +141,20 @@ Checksum = (register + length + sum(data)) & 0xFF
 
 Copyright (c) 2024-2026 **ALEXGAVS**
 
-Настоящим предоставляется разрешение любому лицу, получившему копию данного программного обеспечения и сопутствующей документации (далее — «Программное обеспечение»), использовать Программное обеспечение **ТОЛЬКО** при соблюдении следующих условий:
+Данное программное обеспечение распространяется под лицензией MIT с требованием указания авторства.
 
-1. **ОБЯЗАТЕЛЬНОЕ УКАЗАНИЕ АВТОРСТВА**: При любом использовании, копировании, модификации, объединении, публикации, распространении, сублицензировании и/или продаже копий Программного обеспечения **ОБЯЗАТЕЛЬНО** должна быть сохранена ссылка на оригинального автора **ALEXGAVS** в виде:
-   - Упоминания в исходном коде
-   - Упоминания в документации
-   - Упоминания в пользовательском интерфейсе (если применимо)
+This software is distributed under the MIT License with attribution requirement.
 
-2. **ЗАПРЕТ НА УДАЛЕНИЕ АВТОРСТВА**: Удаление, сокрытие или изменение информации об авторе **ALEXGAVS** категорически запрещено.
+**Основные положения / Key Points:**
 
-3. **ПРОИЗВОДНЫЕ РАБОТЫ**: Любые производные работы должны также содержать указание на оригинального автора **ALEXGAVS** и ссылку на данный репозиторий.
+1. ✅ Свободное использование, модификация, распространение
+2. ✅ Коммерческое использование разрешено
+3. ✅ Создание производных работ разрешено
+4. 📋 Необходимо сохранять уведомление об авторских правах
+5. 📋 Рекомендуется указывать ссылку на оригинального автора
 
-4. **КОММЕРЧЕСКОЕ ИСПОЛЬЗОВАНИЕ**: Коммерческое использование разрешено только при явном указании авторства **ALEXGAVS**.
-
----
-
-Permission is hereby granted to any person obtaining a copy of this software and associated documentation files (the "Software"), to use the Software **ONLY** under the following conditions:
-
-1. **MANDATORY ATTRIBUTION**: Any use, copying, modification, merging, publishing, distribution, sublicensing, and/or selling of copies of the Software **MUST** include a reference to the original author **ALEXGAVS** in the form of:
-   - Mention in source code
-   - Mention in documentation
-   - Mention in user interface (if applicable)
-
-2. **PROHIBITION OF ATTRIBUTION REMOVAL**: Removal, concealment, or alteration of author information **ALEXGAVS** is strictly prohibited.
-
-3. **DERIVATIVE WORKS**: Any derivative works must also contain attribution to the original author **ALEXGAVS** and a link to this repository.
-
-4. **COMMERCIAL USE**: Commercial use is permitted only with explicit attribution to **ALEXGAVS**.
+**Полный текст лицензии:** [LICENSE](LICENSE)
 
 ---
 
-**THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.**
-
----
-
-⚠️ **ИСПОЛЬЗОВАНИЕ ДАННОГО КОДА БЕЗ УКАЗАНИЯ АВТОРСТВА ALEXGAVS ЗАПРЕЩЕНО!**
-
-⚠️ **USE OF THIS CODE WITHOUT ATTRIBUTION TO ALEXGAVS IS PROHIBITED!**
+**Original Author / Оригинальный автор:** ALEXGAVS
