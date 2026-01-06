@@ -1,14 +1,7 @@
 """
 FNIRSI Power Supply Controller
 ===============================
-Класс управления блоком питания FNIRSI на основе декомпилированного C# кода.
-
-Основано на:
-- Serial.cs - подключение и отправка команд
-- SerialData.cs - парсинг данных
-- UserPage4.cs - управление выходом
-- UserSelectBox2Data3.cs - установка напряжения/тока
-- Command.cs - определения команд
+Класс управления блоком питания FNIRSI.
 """
 
 import serial
@@ -21,7 +14,7 @@ from enum import IntEnum
 
 
 # =============================================================================
-# Protocol Constants (из Command.cs)
+# Protocol Constants
 # =============================================================================
 
 class CmdType(IntEnum):
@@ -34,11 +27,11 @@ class CmdType(IntEnum):
 
 
 class Register(IntEnum):
-    """Регистры устройства (из SerialData.cs)"""
+    """Регистры устройства"""
     # Настройки
     BAUD_RATE = 0x00
     
-    # Установка значений (из UserSelectBox2Data3.cs)
+    # Установка значений
     SET_VOLTAGE = 0xC1  # Установить напряжение (через 0xB1)
     SET_CURRENT = 0xC2  # Установить ток (через 0xB1)
     
@@ -89,7 +82,7 @@ class Protection(IntEnum):
 
 @dataclass
 class PowerSupplyState:
-    """Состояние блока питания (из SerialData.cs)"""
+    """Состояние блока питания"""
     # Настройки
     set_voltage: float = 0.0    # Data2 - установленное напряжение
     set_current: float = 0.0    # Data3 - установленный ток
@@ -144,7 +137,7 @@ class PowerSupplyState:
 
 def make_command(cmd_type: int, register: int, data: bytes) -> bytes:
     """
-    Создать пакет команды (из CmdMoudle.cs)
+    Создать пакет команды
     
     Формат: [0xF1] [CmdType] [Register] [Length] [Data...] [Checksum]
     Checksum = (Register + Length + sum(Data)) & 0xFF
@@ -172,7 +165,7 @@ def hex_dump(data: bytes) -> str:
 
 
 # =============================================================================
-# Predefined Commands (из Command.cs)
+# Predefined Commands
 # =============================================================================
 
 class Commands:
@@ -208,7 +201,7 @@ class Commands:
     @staticmethod
     def set_voltage(voltage: float) -> bytes:
         """
-        Установить напряжение (из UserSelectBox2Data3.cs)
+        Установить напряжение
         Использует регистр 0xC1 и cmd_type 0xB1
         """
         return make_command(CmdType.WRITE_BYTE, Register.SET_VOLTAGE, float_to_bytes(voltage))
@@ -216,7 +209,7 @@ class Commands:
     @staticmethod
     def set_current(current: float) -> bytes:
         """
-        Установить ток (из UserSelectBox2Data3.cs)
+        Установить ток
         Использует регистр 0xC2 и cmd_type 0xB1
         """
         return make_command(CmdType.WRITE_BYTE, Register.SET_CURRENT, float_to_bytes(current))
@@ -228,7 +221,7 @@ class Commands:
 
 
 # =============================================================================
-# Response Parser (из SerialData.cs)
+# Response Parser
 # =============================================================================
 
 class ResponseParser:
@@ -254,7 +247,7 @@ class ResponseParser:
         if calc_cs != checksum:
             return False
         
-        # Разбор по регистру (из SerialData.cs setData())
+        # Разбор по регистру
         if register == 0xC0:  # 192 - входное напряжение
             state.input_voltage = bytes_to_float(payload, 0)
             
@@ -344,8 +337,6 @@ class FnirsiController:
     """
     Контроллер блока питания FNIRSI
     
-    Основано на Serial.cs и UserPage4.cs
-    
     Использование:
         psu = FnirsiController()
         if psu.connect("COM11"):
@@ -400,14 +391,12 @@ class FnirsiController:
         self._on_connect = callback
     
     # -------------------------------------------------------------------------
-    # Connection (из Serial.cs open/close)
+    # Connection
     # -------------------------------------------------------------------------
     
     def connect(self, port: str, baud: int = 9600, timeout: float = 2.0) -> bool:
         """
         Подключиться к устройству
-        
-        Основано на Serial.cs open() и UserPage4.cs userButton21_Button_Click()
         """
         self.disconnect()
         
@@ -469,8 +458,6 @@ class FnirsiController:
     def disconnect(self):
         """
         Отключиться от устройства
-        
-        Основано на Serial.cs close()
         """
         self._stop_event.set()
         self._verified = False
@@ -504,8 +491,6 @@ class FnirsiController:
     def set_voltage(self, voltage: float) -> bool:
         """
         Установить напряжение
-        
-        Основано на UserSelectBox2Data3.cs Send() с vFlag=true
         """
         voltage = max(0.0, min(voltage, self._state.max_voltage))
         cmd = Commands.set_voltage(voltage)
@@ -514,8 +499,6 @@ class FnirsiController:
     def set_current(self, current: float) -> bool:
         """
         Установить ток
-        
-        Основано на UserSelectBox2Data3.cs Send() с vFlag=false
         """
         current = max(0.0, min(current, self._state.max_current))
         cmd = Commands.set_current(current)
@@ -524,16 +507,12 @@ class FnirsiController:
     def output_on(self) -> bool:
         """
         Включить выход
-        
-        Основано на UserPage4.cs openOutput()
         """
         return self._send(Commands.OUTPUT_ON)
     
     def output_off(self) -> bool:
         """
         Выключить выход
-        
-        Основано на UserPage4.cs closeOutput()
         """
         return self._send(Commands.OUTPUT_OFF)
     

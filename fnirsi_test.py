@@ -1,6 +1,5 @@
 """
 FNIRSI Power Supply - Test Connection
-Based on decompiled C# code from 数控电源上位机
 
 Protocol format:
   Request:  [0xF1] [CmdType] [Register] [Length] [Data...] [Checksum]
@@ -41,9 +40,9 @@ def hex_dump(data: bytes) -> str:
     return ' '.join(f'{b:02X}' for b in data)
 
 
-# Command definitions based on Command.cs
+# Command definitions
 class Commands:
-    """Command constants from decompiled code"""
+    """Command constants"""
     # CMD_1: Connect (0xF1, 0xC1, 0x00, 0x01)
     CONNECT = make_command(0xC1, 0x00, b'\x01')
     
@@ -95,7 +94,7 @@ class Commands:
 
 @dataclass
 class DeviceData:
-    """Device data structure based on SerialData.cs"""
+    """Device data structure"""
     # Basic readings
     input_voltage: float = 0.0      # Data1 - offset 0
     set_voltage: float = 0.0        # Data2 - offset 4
@@ -141,7 +140,7 @@ class DeviceData:
 
 
 def parse_response(data: bytes, device: DeviceData) -> bool:
-    """Parse response packet based on SerialData.cs setData()"""
+    """Parse response packet"""
     if len(data) < 5 or data[0] != 0xF0:
         return False
     
@@ -161,7 +160,7 @@ def parse_response(data: bytes, device: DeviceData) -> bool:
         print(f"  [!] Checksum mismatch: expected {checksum:02X}, got {calc_cs:02X}")
         return False
     
-    # Parse by register (based on SerialData.cs switch)
+    # Parse by register
     if register == 0xC0:  # Voltage setting (192)
         device.input_voltage = bytes_to_float(payload, 0)
         

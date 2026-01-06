@@ -36,12 +36,8 @@ def test_commands():
     print(f"  Команда: {hex_dump(cmd_a1)}")
     print(f"  Float value: {struct.unpack('<f', cmd_a1[4:8])[0]}")
     
-    # Сравнение с оригинальным форматом из C#
-    # CmdMoudle(241, 177, 193, BitConverter.GetBytes(5.0f))
-    # 241=0xF1, 177=0xB1, 193=0xC1
-    # 5.0f = 00 00 A0 40
     print("\n" + "=" * 60)
-    print("Ожидаемый формат из C#:")
+    print("Ожидаемый формат:")
     print("  set_voltage(5.0): F1 B1 C1 04 00 00 A0 40 xx")
     print("=" * 60)
 

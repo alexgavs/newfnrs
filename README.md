@@ -5,9 +5,9 @@
 
 ## Описание / Description
 
-**RU:** Полная Python-библиотека для управления лабораторными источниками питания FNIRSI через USB/Serial интерфейс. Реализация основана на анализе и декомпиляции оригинального программного обеспечения.
+**RU:** Полная Python-библиотека для управления лабораторными источниками питания FNIRSI через USB/Serial интерфейс.
 
-**EN:** Complete Python library for controlling FNIRSI laboratory power supplies via USB/Serial interface. Implementation based on analysis and decompilation of original software.
+**EN:** Complete Python library for controlling FNIRSI laboratory power supplies via USB/Serial interface.
 
 ## Возможности / Features
 

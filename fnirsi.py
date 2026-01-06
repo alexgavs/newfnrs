@@ -1,7 +1,7 @@
 """
 FNIRSI Power Supply Python Library
 ===================================
-Complete Python implementation based on decompiled C# code from 数控电源上位机
+Complete Python implementation for FNIRSI power supply control.
 
 This module provides:
 - FnirsiDevice: Main class for controlling FNIRSI power supplies
@@ -38,7 +38,7 @@ class Header:
 
 
 class CmdType:
-    """Command types based on decompiled code"""
+    """Command types"""
     READ = 0xA1     # Read register
     WRITE = 0xB0    # Write value (float)
     WRITE_BYTE = 0xB1  # Write single byte
@@ -47,7 +47,7 @@ class CmdType:
 
 
 class Register(IntEnum):
-    """Register addresses based on SerialData.cs"""
+    """Register addresses"""
     # Settings
     BAUD_RATE = 0x00
     SET_VOLTAGE = 0xC0
@@ -129,7 +129,7 @@ def hex_dump(data: bytes, max_len: int = 0) -> str:
 
 class CommandBuilder:
     """
-    Command packet builder based on CmdMoudle.cs
+    Command packet builder
     
     Packet format: [Header] [CmdType] [Register] [Length] [Data...] [Checksum]
     Checksum = (Register + Length + sum(Data)) & 0xFF
@@ -177,7 +177,7 @@ def make_command(cmd_type: int, register: int, data: bytes = b'\x00') -> bytes:
 
 
 # =============================================================================
-# Predefined Commands (from Command.cs)
+# Predefined Commands
 # =============================================================================
 
 class Commands:
@@ -216,13 +216,13 @@ class Commands:
 
 
 # =============================================================================
-# Device Data Structure (from SerialData.cs)
+# Device Data Structure
 # =============================================================================
 
 @dataclass
 class DeviceData:
     """
-    Device state data structure based on SerialData.cs
+    Device state data structure
     
     Field offsets in 0xFF response:
     - 0:   Input voltage (Data1)
@@ -329,12 +329,12 @@ class DeviceData:
 
 
 # =============================================================================
-# Response Parser (from SerialData.cs)
+# Response Parser
 # =============================================================================
 
 class ResponseParser:
     """
-    Response packet parser based on SerialData.cs setData()
+    Response packet parser
     """
     
     @staticmethod
@@ -365,7 +365,7 @@ class ResponseParser:
         length = data[3]
         payload = data[4:4 + length]
         
-        # Parse by register (based on SerialData.cs switch statement)
+        # Parse by register
         if register == Register.SET_VOLTAGE:  # 0xC0
             device.input_voltage = bytes_to_float(payload, 0)
             
@@ -490,14 +490,12 @@ class ResponseParser:
 
 
 # =============================================================================
-# FNIRSI Device Class (from Serial.cs)
+# FNIRSI Device Class
 # =============================================================================
 
 class FnirsiDevice:
     """
     Main class for controlling FNIRSI power supplies
-    
-    Based on Serial.cs implementation
     
     Usage:
         device = FnirsiDevice()
@@ -581,8 +579,6 @@ class FnirsiDevice:
     def connect(self, port: str, baud: int = DEFAULT_BAUD, timeout: float = 2.0) -> bool:
         """
         Connect to FNIRSI device
-        
-        Based on Serial.cs open() method
         """
         self.disconnect()
         
