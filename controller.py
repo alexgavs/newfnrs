@@ -30,7 +30,7 @@ class Register(IntEnum):
     """Регистры устройства"""
     # Настройки
     BAUD_RATE = 0x00
-    BRIGHTNESS = 0xD6   # Яркость дисплея (0-35)
+    BRIGHTNESS = 0xD6   # Яркость дисплея (0-20)
     
     # Установка значений
     SET_VOLTAGE = 0xC1  # Установить напряжение (через 0xB1)
@@ -62,6 +62,27 @@ class Register(IntEnum):
     # Лимиты
     MAX_VOLTAGE = 0xE2
     MAX_CURRENT = 0xE3
+    
+    # Защиты (настройка лимитов)
+    OVP_LIMIT = 0xD1     # Over Voltage Protection limit
+    OCP_LIMIT = 0xD2     # Over Current Protection limit
+    OPP_LIMIT = 0xD3     # Over Power Protection limit
+    OTP_LIMIT = 0xD4     # Over Temperature Protection limit
+    
+    # Пресеты устройства (6 пар, начиная с 0xC5)
+    # Preset N: V = 0xC3 + 2*N, A = 0xC4 + 2*N (где N=1..6)
+    PRESET_1_V = 0xC5
+    PRESET_1_A = 0xC6
+    PRESET_2_V = 0xC7
+    PRESET_2_A = 0xC8
+    PRESET_3_V = 0xC9
+    PRESET_3_A = 0xCA
+    PRESET_4_V = 0xCB
+    PRESET_4_A = 0xCC
+    PRESET_5_V = 0xCD
+    PRESET_5_A = 0xCE
+    PRESET_6_V = 0xCF
+    PRESET_6_A = 0xD0
     
     # Все параметры
     ALL = 0xFF
@@ -225,6 +246,62 @@ class Commands:
         """Установить яркость дисплея (0-20)"""
         level = max(0, min(20, level))
         return make_command(CmdType.WRITE_BYTE, 0xD6, bytes([level]))
+    
+    # -------------------------------------------------------------------------
+    # Команды установки защит (из UserSelectBox2Data4 / UserPage12)
+    # -------------------------------------------------------------------------
+    
+    @staticmethod
+    def set_ovp_limit(voltage: float) -> bytes:
+        """Установить лимит OVP (Over Voltage Protection)"""
+        return make_command(CmdType.WRITE_BYTE, Register.OVP_LIMIT, float_to_bytes(voltage))
+    
+    @staticmethod
+    def set_ocp_limit(current: float) -> bytes:
+        """Установить лимит OCP (Over Current Protection)"""
+        return make_command(CmdType.WRITE_BYTE, Register.OCP_LIMIT, float_to_bytes(current))
+    
+    @staticmethod
+    def set_opp_limit(power: float) -> bytes:
+        """Установить лимит OPP (Over Power Protection)"""
+        return make_command(CmdType.WRITE_BYTE, Register.OPP_LIMIT, float_to_bytes(power))
+    
+    @staticmethod
+    def set_otp_limit(temperature: float) -> bytes:
+        """Установить лимит OTP (Over Temperature Protection)"""
+        return make_command(CmdType.WRITE_BYTE, Register.OTP_LIMIT, float_to_bytes(temperature))
+    
+    # -------------------------------------------------------------------------
+    # Команды пресетов устройства (из UserSelectBox2Data2)
+    # -------------------------------------------------------------------------
+    
+    @staticmethod
+    def set_device_preset(preset_num: int, voltage: float, current: float) -> list:
+        """
+        Установить пресет на устройстве (1-6)
+        Возвращает список из 2 команд (V и A)
+        """
+        if preset_num < 1 or preset_num > 6:
+            return []
+        
+        # Формула: V = 0xC3 + 2*preset_num, A = V + 1
+        v_register = 0xC3 + 2 * preset_num  # 0xC5, 0xC7, 0xC9...
+        a_register = v_register + 1          # 0xC6, 0xC8, 0xCA...
+        
+        return [
+            make_command(CmdType.WRITE_BYTE, v_register, float_to_bytes(voltage)),
+            make_command(CmdType.WRITE_BYTE, a_register, float_to_bytes(current))
+        ]
+    
+    # -------------------------------------------------------------------------
+    # Команды чтения (из Command.cs CMD_14, CMD_16, CMD_17, CMD_18)
+    # -------------------------------------------------------------------------
+    
+    # CMD_14: Читать Live V/A/W
+    READ_LIVE = make_command(CmdType.READ, Register.LIVE_VALUES, b'\x00')
+    
+    # CMD_16: Читать серийный номер
+    READ_SERIAL = make_command(CmdType.READ, Register.SERIAL, b'\x00')
 
 
 # =============================================================================
@@ -536,9 +613,48 @@ class FnirsiController:
     
     def set_brightness(self, level: int) -> bool:
         """
-        Установить яркость дисплея (0-35)
+        Установить яркость дисплея (0-20)
         """
         return self._send(Commands.set_brightness(level))
+    
+    def set_ovp(self, voltage: float) -> bool:
+        """Установить лимит OVP (Over Voltage Protection)"""
+        return self._send(Commands.set_ovp_limit(voltage))
+    
+    def set_ocp(self, current: float) -> bool:
+        """Установить лимит OCP (Over Current Protection)"""
+        return self._send(Commands.set_ocp_limit(current))
+    
+    def set_opp(self, power: float) -> bool:
+        """Установить лимит OPP (Over Power Protection)"""
+        return self._send(Commands.set_opp_limit(power))
+    
+    def set_otp(self, temperature: float) -> bool:
+        """Установить лимит OTP (Over Temperature Protection)"""
+        return self._send(Commands.set_otp_limit(temperature))
+    
+    def set_device_preset(self, preset_num: int, voltage: float, current: float) -> bool:
+        """
+        Записать пресет на устройство (1-6)
+        Эти пресеты хранятся в памяти устройства
+        """
+        commands = Commands.set_device_preset(preset_num, voltage, current)
+        if not commands:
+            return False
+        
+        success = True
+        for cmd in commands:
+            if not self._send(cmd):
+                success = False
+            time.sleep(0.05)
+        
+        # Сохранить изменения на устройстве
+        self._send(Commands.READ_ALL)
+        return success
+    
+    def read_live(self) -> bool:
+        """Запросить текущие V/A/W"""
+        return self._send(Commands.READ_LIVE)
 
     def read_all(self) -> bool:
         """Запросить все параметры"""

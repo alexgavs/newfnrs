@@ -136,10 +136,15 @@ Flow Control: None
 |-------|-----|-----|-------------|----------------|
 | `0x00` | BAUD_RATE | R/W | Скорость порта | Baud rate setting |
 | `0xC0` | SET_VOLTAGE | R/W | Уставка напряжения | Voltage setpoint |
-| `0xC1` | PRESET_V1 | R/W | Пресет 1 напряжение | Preset 1 voltage |
-| `0xC2` | PRESET_A1 | R/W | Пресет 1 ток | Preset 1 current |
+| `0xC1` | WRITE_VOLTAGE | W | Записать напряжение | Write voltage |
+| `0xC2` | WRITE_CURRENT | W | Записать ток | Write current |
 | `0xC3` | LIVE_VALUES | R | Текущие V, A, W | Live V, A, W readings |
 | `0xC4` | TEMPERATURE | R | Температура | Temperature |
+| `0xC5-0xD0` | PRESET_1-6 | R/W | Пресеты устройства | Device presets |
+| `0xD1` | OVP_LIMIT | R/W | Лимит OVP (V) | OVP limit voltage |
+| `0xD2` | OCP_LIMIT | R/W | Лимит OCP (A) | OCP limit current |
+| `0xD3` | OPP_LIMIT | R/W | Лимит OPP (W) | OPP limit power |
+| `0xD4` | OTP_LIMIT | R/W | Лимит OTP (°C) | OTP limit temp |
 | `0xD6` | BRIGHTNESS | R/W | Яркость дисплея (0-20) | Display brightness (0-20) |
 | `0xD9` | CAPACITY_AH | R | Ёмкость (Ah) | Capacity (Ah) |
 | `0xDA` | CAPACITY_WH | R | Ёмкость (Wh) | Capacity (Wh) |
@@ -153,6 +158,21 @@ Flow Control: None
 | `0xE2` | MAX_VOLTAGE | R | Макс. напряжение | Max voltage |
 | `0xE3` | MAX_CURRENT | R | Макс. ток | Max current |
 | `0xFF` | ALL | R | Все параметры | All parameters |
+
+### Пресеты устройства / Device Presets
+
+Устройство хранит 6 пресетов в памяти (видны в меню на экране):
+
+| Пресет | V регистр | A регистр |
+|--------|-----------|-----------|
+| 1 | 0xC5 | 0xC6 |
+| 2 | 0xC7 | 0xC8 |
+| 3 | 0xC9 | 0xCA |
+| 4 | 0xCB | 0xCC |
+| 5 | 0xCD | 0xCE |
+| 6 | 0xCF | 0xD0 |
+
+Формула: `V_reg = 0xC3 + 2*N`, `A_reg = V_reg + 1` (N = 1..6)
 
 ### Регистр 0xC3 — LIVE_VALUES (Измерения в реальном времени)
 
