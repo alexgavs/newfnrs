@@ -93,6 +93,8 @@ Checksum = (register + length + sum(data)) & 0xFF
 
 Данные передаются в формате IEEE 754 float (little-endian, 4 байта).
 
+📖 **Подробная документация протокола:** [PROTOCOL.md](PROTOCOL.md)
+
 ## Структура проекта / Project Structure
 
 | Файл | Описание |
