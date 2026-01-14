@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Claude IDE
+.claude/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# Config files (may contain sensitive data)
+*.json
+!lang/*.json
+
+# OS
+.DS_Store
+Thumbs.db
