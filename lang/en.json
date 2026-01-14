@@ -1,0 +1,109 @@
+{
+  "app_title": "FNIRSI Power Supply Control - by ALEXGAVS",
+  "menu": {
+    "file": "File",
+    "connection": "Connection",
+    "tools": "Tools",
+    "help": "Help",
+    "export_data": "Export Data...",
+    "save_screenshot": "Save Screenshot...",
+    "exit": "Exit",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "refresh_ports": "Refresh Ports",
+    "clear_charts": "Clear Charts",
+    "data_recording": "Data Recording",
+    "settings": "Settings...",
+    "about": "About"
+  },
+  "toolbar": {
+    "port": "Port:",
+    "connect": "Connect",
+    "disconnect": "Disconnect"
+  },
+  "control_panel": {
+    "title": "Control",
+    "voltage": "Voltage (V):",
+    "current": "Current (A):",
+    "set_button": "SET",
+    "output_on": "OUTPUT ON",
+    "output_off": "OUTPUT OFF"
+  },
+  "readings_panel": {
+    "title": "Readings",
+    "temperature": "Temperature:",
+    "capacity": "Capacity:",
+    "energy": "Energy:",
+    "mode": "Mode:",
+    "protection": "Protection:",
+    "brightness_title": "Display Brightness",
+    "brightness_range": "(0-20)"
+  },
+  "presets_panel": {
+    "title": "Presets",
+    "hint": "LMB - apply, RMB - configure",
+    "edit_title": "Edit Preset",
+    "name": "Name:",
+    "voltage": "Voltage (V):",
+    "current": "Current (A):",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "settings_dialog": {
+    "title": "Settings",
+    "connection_tab": "Connection",
+    "charts_tab": "Charts",
+    "protection_tab": "Protection",
+    "interface_tab": "Interface",
+    "baud_rate": "Baud Rate:",
+    "timeout": "Timeout (sec):",
+    "auto_reconnect": "Auto-reconnect:",
+    "max_points": "Max Points:",
+    "update_interval": "Update Interval (ms):",
+    "show_grid": "Show Grid:",
+    "ovp": "OVP (overvoltage):",
+    "ocp": "OCP (overcurrent):",
+    "opp": "OPP (overpower):",
+    "theme": "Theme:",
+    "language": "Language:",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "charts": {
+    "voltage": "Voltage (V)",
+    "current": "Current (A)",
+    "power": "Power (W)",
+    "temperature": "Temperature (°C)",
+    "time": "Time (s)"
+  },
+  "status": {
+    "ready": "Ready",
+    "connecting": "Connecting to {port}...",
+    "connected": "Connected to {port}",
+    "disconnected": "Disconnected",
+    "connection_error": "Connection error",
+    "packets": "Packets: {count}",
+    "recording": "● REC"
+  },
+  "messages": {
+    "select_port": "Select COM port",
+    "connection_failed": "Failed to connect to {port}",
+    "invalid_voltage": "Invalid voltage value",
+    "invalid_current": "Invalid current value",
+    "invalid_value": "Invalid value: {error}",
+    "no_data": "No recorded data",
+    "export_success": "Data exported to {filename}",
+    "export_error": "Failed to save file: {error}",
+    "screenshot_success": "Screenshot saved to {filename}",
+    "screenshot_error": "Failed to save: {error}",
+    "warning": "Warning",
+    "error": "Error",
+    "success": "Success",
+    "info": "Information"
+  },
+  "about": {
+    "text": "FNIRSI Power Supply Control\n\nGraphical interface for controlling\nFNIRSI laboratory power supplies.\n\nVersion: 1.0\nAuthor: ALEXGAVS\n\n© 2024-2026 ALEXGAVS\nUsage without attribution is prohibited."
+  },
+  "matplotlib_warning": "Charts not available.\nInstall matplotlib: pip install matplotlib",
+  "matplotlib_cli_warning": "WARNING: matplotlib not installed!\nInstall it with: pip install matplotlib\nCharts will be disabled."
+}

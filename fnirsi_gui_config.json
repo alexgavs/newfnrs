@@ -8,7 +8,7 @@
   "ovp_limit": 0.0,
   "ocp_limit": 0.0,
   "opp_limit": 0.0,
-  "theme": "default",
-  "language": "ru",
+  "theme": "alt",
+  "language": "en",
   "last_port": "COM11"
 }

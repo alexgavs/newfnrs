@@ -1,0 +1,109 @@
+{
+  "app_title": "Управление блоком питания FNIRSI - by ALEXGAVS",
+  "menu": {
+    "file": "Файл",
+    "connection": "Соединение",
+    "tools": "Инструменты",
+    "help": "Справка",
+    "export_data": "Экспорт данных...",
+    "save_screenshot": "Сохранить скриншот...",
+    "exit": "Выход",
+    "connect": "Подключить",
+    "disconnect": "Отключить",
+    "refresh_ports": "Обновить порты",
+    "clear_charts": "Очистить графики",
+    "data_recording": "Запись данных",
+    "settings": "Настройки...",
+    "about": "О программе"
+  },
+  "toolbar": {
+    "port": "Порт:",
+    "connect": "Подключить",
+    "disconnect": "Отключить"
+  },
+  "control_panel": {
+    "title": "Управление",
+    "voltage": "Напряжение (V):",
+    "current": "Ток (A):",
+    "set_button": "SET",
+    "output_on": "ВЫХОД ВКЛ",
+    "output_off": "ВЫХОД ВЫКЛ"
+  },
+  "readings_panel": {
+    "title": "Показания",
+    "temperature": "Температура:",
+    "capacity": "Ёмкость:",
+    "energy": "Энергия:",
+    "mode": "Режим:",
+    "protection": "Защита:",
+    "brightness_title": "Яркость дисплея",
+    "brightness_range": "(0-20)"
+  },
+  "presets_panel": {
+    "title": "Пресеты",
+    "hint": "ЛКМ - применить, ПКМ - настроить",
+    "edit_title": "Редактирование пресета",
+    "name": "Название:",
+    "voltage": "Напряжение (V):",
+    "current": "Ток (A):",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+  "settings_dialog": {
+    "title": "Настройки",
+    "connection_tab": "Соединение",
+    "charts_tab": "Графики",
+    "protection_tab": "Защиты",
+    "interface_tab": "Интерфейс",
+    "baud_rate": "Скорость порта:",
+    "timeout": "Таймаут (сек):",
+    "auto_reconnect": "Авто-переподключение:",
+    "max_points": "Макс. точек:",
+    "update_interval": "Интервал обновления (мс):",
+    "show_grid": "Показывать сетку:",
+    "ovp": "OVP (перенапряжение):",
+    "ocp": "OCP (перегрузка по току):",
+    "opp": "OPP (перегрузка по мощности):",
+    "theme": "Тема:",
+    "language": "Язык:",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+  "charts": {
+    "voltage": "Напряжение (V)",
+    "current": "Ток (A)",
+    "power": "Мощность (W)",
+    "temperature": "Температура (°C)",
+    "time": "Время (с)"
+  },
+  "status": {
+    "ready": "Готов к работе",
+    "connecting": "Подключение к {port}...",
+    "connected": "Подключено к {port}",
+    "disconnected": "Отключено",
+    "connection_error": "Ошибка подключения",
+    "packets": "Пакетов: {count}",
+    "recording": "● REC"
+  },
+  "messages": {
+    "select_port": "Выберите COM-порт",
+    "connection_failed": "Не удалось подключиться к {port}",
+    "invalid_voltage": "Неверное значение напряжения",
+    "invalid_current": "Неверное значение тока",
+    "invalid_value": "Неверное значение: {error}",
+    "no_data": "Нет записанных данных",
+    "export_success": "Данные экспортированы в {filename}",
+    "export_error": "Не удалось сохранить файл: {error}",
+    "screenshot_success": "Скриншот сохранён в {filename}",
+    "screenshot_error": "Не удалось сохранить: {error}",
+    "warning": "Предупреждение",
+    "error": "Ошибка",
+    "success": "Успех",
+    "info": "Информация"
+  },
+  "about": {
+    "text": "FNIRSI Power Supply Control\n\nГрафический интерфейс для управления\nлабораторными источниками питания FNIRSI.\n\nВерсия: 1.0\nАвтор: ALEXGAVS\n\n© 2024-2026 ALEXGAVS\nИспользование без указания авторства запрещено."
+  },
+  "matplotlib_warning": "Графики недоступны.\nУстановите matplotlib: pip install matplotlib",
+  "matplotlib_cli_warning": "ВНИМАНИЕ: matplotlib не установлен!\nУстановите его командой: pip install matplotlib\nГрафики будут отключены."
+}

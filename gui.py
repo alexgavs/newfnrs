@@ -31,6 +31,7 @@ except ImportError:
     print("Warning: matplotlib not installed. Charts will be disabled.")
 
 from controller import FnirsiController, PowerSupplyState
+from language_manager import LanguageManager
 
 
 class ChartData:
@@ -73,18 +74,19 @@ class ChartData:
 
 class SettingsDialog(tk.Toplevel):
     """Диалог настроек"""
-    
-    def __init__(self, parent, settings: dict):
+
+    def __init__(self, parent, settings: dict, lang: LanguageManager):
         super().__init__(parent)
-        self.title("Настройки / Settings")
+        self.lang = lang
+        self.title(lang.t("settings_dialog.title"))
         self.geometry("400x500")
         self.resizable(False, False)
         self.transient(parent)
         self.grab_set()
-        
+
         self.settings = settings.copy()
         self.result = None
-        
+
         self._create_widgets()
         self._center_window()
     
@@ -97,90 +99,90 @@ class SettingsDialog(tk.Toplevel):
     def _create_widgets(self):
         notebook = ttk.Notebook(self)
         notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-        
+
         # Вкладка "Соединение"
         conn_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(conn_frame, text="Соединение")
-        
-        ttk.Label(conn_frame, text="Скорость порта:").grid(row=0, column=0, sticky=tk.W, pady=5)
+        notebook.add(conn_frame, text=self.lang.t("settings_dialog.connection_tab"))
+
+        ttk.Label(conn_frame, text=self.lang.t("settings_dialog.baud_rate")).grid(row=0, column=0, sticky=tk.W, pady=5)
         self.baud_var = tk.StringVar(value=str(self.settings.get('baud_rate', 9600)))
-        baud_combo = ttk.Combobox(conn_frame, textvariable=self.baud_var, 
+        baud_combo = ttk.Combobox(conn_frame, textvariable=self.baud_var,
                                    values=['9600', '19200', '38400', '57600', '115200'])
         baud_combo.grid(row=0, column=1, sticky=tk.EW, pady=5)
-        
-        ttk.Label(conn_frame, text="Таймаут (сек):").grid(row=1, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(conn_frame, text=self.lang.t("settings_dialog.timeout")).grid(row=1, column=0, sticky=tk.W, pady=5)
         self.timeout_var = tk.StringVar(value=str(self.settings.get('timeout', 2.0)))
         ttk.Entry(conn_frame, textvariable=self.timeout_var).grid(row=1, column=1, sticky=tk.EW, pady=5)
-        
-        ttk.Label(conn_frame, text="Авто-переподключение:").grid(row=2, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(conn_frame, text=self.lang.t("settings_dialog.auto_reconnect")).grid(row=2, column=0, sticky=tk.W, pady=5)
         self.auto_reconnect_var = tk.BooleanVar(value=self.settings.get('auto_reconnect', True))
         ttk.Checkbutton(conn_frame, variable=self.auto_reconnect_var).grid(row=2, column=1, sticky=tk.W, pady=5)
-        
+
         conn_frame.columnconfigure(1, weight=1)
-        
+
         # Вкладка "Графики"
         chart_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(chart_frame, text="Графики")
-        
-        ttk.Label(chart_frame, text="Макс. точек:").grid(row=0, column=0, sticky=tk.W, pady=5)
+        notebook.add(chart_frame, text=self.lang.t("settings_dialog.charts_tab"))
+
+        ttk.Label(chart_frame, text=self.lang.t("settings_dialog.max_points")).grid(row=0, column=0, sticky=tk.W, pady=5)
         self.max_points_var = tk.StringVar(value=str(self.settings.get('max_chart_points', 300)))
         ttk.Entry(chart_frame, textvariable=self.max_points_var).grid(row=0, column=1, sticky=tk.EW, pady=5)
-        
-        ttk.Label(chart_frame, text="Интервал обновления (мс):").grid(row=1, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(chart_frame, text=self.lang.t("settings_dialog.update_interval")).grid(row=1, column=0, sticky=tk.W, pady=5)
         self.update_interval_var = tk.StringVar(value=str(self.settings.get('update_interval', 200)))
         ttk.Entry(chart_frame, textvariable=self.update_interval_var).grid(row=1, column=1, sticky=tk.EW, pady=5)
-        
-        ttk.Label(chart_frame, text="Показывать сетку:").grid(row=2, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(chart_frame, text=self.lang.t("settings_dialog.show_grid")).grid(row=2, column=0, sticky=tk.W, pady=5)
         self.show_grid_var = tk.BooleanVar(value=self.settings.get('show_grid', True))
         ttk.Checkbutton(chart_frame, variable=self.show_grid_var).grid(row=2, column=1, sticky=tk.W, pady=5)
-        
+
         chart_frame.columnconfigure(1, weight=1)
-        
+
         # Вкладка "Защиты"
         protection_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(protection_frame, text="Защиты")
-        
-        ttk.Label(protection_frame, text="OVP (перенапряжение):").grid(row=0, column=0, sticky=tk.W, pady=5)
+        notebook.add(protection_frame, text=self.lang.t("settings_dialog.protection_tab"))
+
+        ttk.Label(protection_frame, text=self.lang.t("settings_dialog.ovp")).grid(row=0, column=0, sticky=tk.W, pady=5)
         self.ovp_var = tk.StringVar(value=str(self.settings.get('ovp_limit', 0)))
         ttk.Entry(protection_frame, textvariable=self.ovp_var).grid(row=0, column=1, sticky=tk.EW, pady=5)
         ttk.Label(protection_frame, text="V").grid(row=0, column=2, padx=5)
-        
-        ttk.Label(protection_frame, text="OCP (перегрузка по току):").grid(row=1, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(protection_frame, text=self.lang.t("settings_dialog.ocp")).grid(row=1, column=0, sticky=tk.W, pady=5)
         self.ocp_var = tk.StringVar(value=str(self.settings.get('ocp_limit', 0)))
         ttk.Entry(protection_frame, textvariable=self.ocp_var).grid(row=1, column=1, sticky=tk.EW, pady=5)
         ttk.Label(protection_frame, text="A").grid(row=1, column=2, padx=5)
-        
-        ttk.Label(protection_frame, text="OPP (перегрузка по мощности):").grid(row=2, column=0, sticky=tk.W, pady=5)
+
+        ttk.Label(protection_frame, text=self.lang.t("settings_dialog.opp")).grid(row=2, column=0, sticky=tk.W, pady=5)
         self.opp_var = tk.StringVar(value=str(self.settings.get('opp_limit', 0)))
         ttk.Entry(protection_frame, textvariable=self.opp_var).grid(row=2, column=1, sticky=tk.EW, pady=5)
         ttk.Label(protection_frame, text="W").grid(row=2, column=2, padx=5)
-        
+
         protection_frame.columnconfigure(1, weight=1)
-        
+
         # Вкладка "Интерфейс"
         ui_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(ui_frame, text="Интерфейс")
-        
-        ttk.Label(ui_frame, text="Тема:").grid(row=0, column=0, sticky=tk.W, pady=5)
+        notebook.add(ui_frame, text=self.lang.t("settings_dialog.interface_tab"))
+
+        ttk.Label(ui_frame, text=self.lang.t("settings_dialog.theme")).grid(row=0, column=0, sticky=tk.W, pady=5)
         self.theme_var = tk.StringVar(value=self.settings.get('theme', 'default'))
         theme_combo = ttk.Combobox(ui_frame, textvariable=self.theme_var,
                                     values=['default', 'clam', 'alt', 'classic'])
         theme_combo.grid(row=0, column=1, sticky=tk.EW, pady=5)
-        
-        ttk.Label(ui_frame, text="Язык:").grid(row=1, column=0, sticky=tk.W, pady=5)
-        self.lang_var = tk.StringVar(value=self.settings.get('language', 'ru'))
+
+        ttk.Label(ui_frame, text=self.lang.t("settings_dialog.language")).grid(row=1, column=0, sticky=tk.W, pady=5)
+        self.lang_var = tk.StringVar(value=self.settings.get('language', 'en'))
         lang_combo = ttk.Combobox(ui_frame, textvariable=self.lang_var,
-                                   values=['ru', 'en'])
+                                   values=['en', 'ru'])
         lang_combo.grid(row=1, column=1, sticky=tk.EW, pady=5)
-        
+
         ui_frame.columnconfigure(1, weight=1)
-        
+
         # Кнопки
         btn_frame = ttk.Frame(self)
         btn_frame.pack(fill=tk.X, padx=10, pady=10)
-        
-        ttk.Button(btn_frame, text="Отмена", command=self.destroy).pack(side=tk.RIGHT, padx=5)
-        ttk.Button(btn_frame, text="Сохранить", command=self._save).pack(side=tk.RIGHT, padx=5)
+
+        ttk.Button(btn_frame, text=self.lang.t("settings_dialog.cancel"), command=self.destroy).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(btn_frame, text=self.lang.t("settings_dialog.save"), command=self._save).pack(side=tk.RIGHT, padx=5)
     
     def _save(self):
         try:
@@ -199,7 +201,7 @@ class SettingsDialog(tk.Toplevel):
             }
             self.destroy()
         except ValueError as e:
-            messagebox.showerror("Ошибка", f"Неверное значение: {e}")
+            messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.invalid_value", error=str(e)))
 
 
 class FnirsiGUI:
@@ -209,42 +211,46 @@ class FnirsiGUI:
     
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("FNIRSI Power Supply Control - by ALEXGAVS")
+
+        # Настройки
+        self.settings = self._load_settings()
+
+        # Language manager - английский по умолчанию
+        self.lang = LanguageManager(self.settings.get('language', 'en'))
+
+        self.root.title(self.lang.t("app_title"))
         self.root.geometry("1200x800")
         self.root.minsize(900, 600)
-        
+
         # Контроллер
         self.psu = FnirsiController()
         self.connected = False
-        
+
         # Данные для графиков
         self.chart_data = ChartData()
         self.recording = False
         self.recorded_data: List[dict] = []
-        
-        # Настройки
-        self.settings = self._load_settings()
-        
+
         # Применить тему
         style = ttk.Style()
         try:
             style.theme_use(self.settings.get('theme', 'default'))
         except:
             pass
-        
+
         # Переменные
         self._create_variables()
-        
+
         # UI
         self._create_menu()
         self._create_toolbar()
         self._create_main_layout()
         self._create_status_bar()
-        
+
         # Таймер обновления
         self._update_job = None
         self._start_update_loop()
-        
+
         # Обработчик закрытия
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
     
@@ -264,7 +270,7 @@ class FnirsiGUI:
                 'ocp_limit': 0,
                 'opp_limit': 0,
                 'theme': 'default',
-                'language': 'ru',
+                'language': 'en',  # Английский по умолчанию
                 'last_port': ''
             }
     
@@ -297,60 +303,60 @@ class FnirsiGUI:
     def _create_menu(self):
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
-        
+
         # Файл
         file_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Файл", menu=file_menu)
-        file_menu.add_command(label="Экспорт данных...", command=self._export_data)
-        file_menu.add_command(label="Сохранить скриншот...", command=self._save_screenshot)
+        menubar.add_cascade(label=self.lang.t("menu.file"), menu=file_menu)
+        file_menu.add_command(label=self.lang.t("menu.export_data"), command=self._export_data)
+        file_menu.add_command(label=self.lang.t("menu.save_screenshot"), command=self._save_screenshot)
         file_menu.add_separator()
-        file_menu.add_command(label="Выход", command=self._on_close)
-        
+        file_menu.add_command(label=self.lang.t("menu.exit"), command=self._on_close)
+
         # Соединение
         conn_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Соединение", menu=conn_menu)
-        conn_menu.add_command(label="Подключить", command=self._connect)
-        conn_menu.add_command(label="Отключить", command=self._disconnect)
+        menubar.add_cascade(label=self.lang.t("menu.connection"), menu=conn_menu)
+        conn_menu.add_command(label=self.lang.t("menu.connect"), command=self._connect)
+        conn_menu.add_command(label=self.lang.t("menu.disconnect"), command=self._disconnect)
         conn_menu.add_separator()
-        conn_menu.add_command(label="Обновить порты", command=self._refresh_ports)
-        
+        conn_menu.add_command(label=self.lang.t("menu.refresh_ports"), command=self._refresh_ports)
+
         # Инструменты
         tools_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Инструменты", menu=tools_menu)
-        tools_menu.add_command(label="Очистить графики", command=self._clear_charts)
-        tools_menu.add_checkbutton(label="Запись данных", command=self._toggle_recording)
+        menubar.add_cascade(label=self.lang.t("menu.tools"), menu=tools_menu)
+        tools_menu.add_command(label=self.lang.t("menu.clear_charts"), command=self._clear_charts)
+        tools_menu.add_checkbutton(label=self.lang.t("menu.data_recording"), command=self._toggle_recording)
         tools_menu.add_separator()
-        tools_menu.add_command(label="Настройки...", command=self._show_settings)
-        
+        tools_menu.add_command(label=self.lang.t("menu.settings"), command=self._show_settings)
+
         # Справка
         help_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Справка", menu=help_menu)
-        help_menu.add_command(label="О программе", command=self._show_about)
+        menubar.add_cascade(label=self.lang.t("menu.help"), menu=help_menu)
+        help_menu.add_command(label=self.lang.t("menu.about"), command=self._show_about)
     
     def _create_toolbar(self):
         toolbar = ttk.Frame(self.root)
         toolbar.pack(fill=tk.X, padx=5, pady=5)
-        
+
         # Выбор порта
-        ttk.Label(toolbar, text="Порт:").pack(side=tk.LEFT, padx=5)
+        ttk.Label(toolbar, text=self.lang.t("toolbar.port")).pack(side=tk.LEFT, padx=5)
         self.port_combo = ttk.Combobox(toolbar, textvariable=self.port_var, width=15)
         self.port_combo.pack(side=tk.LEFT, padx=5)
         self._refresh_ports()
-        
+
         # Кнопки подключения
-        self.connect_btn = ttk.Button(toolbar, text="Подключить", command=self._connect)
+        self.connect_btn = ttk.Button(toolbar, text=self.lang.t("toolbar.connect"), command=self._connect)
         self.connect_btn.pack(side=tk.LEFT, padx=5)
-        
-        self.disconnect_btn = ttk.Button(toolbar, text="Отключить", command=self._disconnect, state=tk.DISABLED)
+
+        self.disconnect_btn = ttk.Button(toolbar, text=self.lang.t("toolbar.disconnect"), command=self._disconnect, state=tk.DISABLED)
         self.disconnect_btn.pack(side=tk.LEFT, padx=5)
-        
+
         ttk.Separator(toolbar, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=10)
-        
+
         # Индикатор статуса
         self.status_indicator = tk.Canvas(toolbar, width=20, height=20)
         self.status_indicator.pack(side=tk.LEFT, padx=5)
         self._update_status_indicator(False)
-        
+
         ttk.Label(toolbar, textvariable=self.model_var).pack(side=tk.LEFT, padx=5)
     
     def _create_main_layout(self):
@@ -373,23 +379,23 @@ class FnirsiGUI:
         self._create_charts_panel(right_frame)
     
     def _create_control_panel(self, parent):
-        frame = ttk.LabelFrame(parent, text="Управление", padding=10)
+        frame = ttk.LabelFrame(parent, text=self.lang.t("control_panel.title"), padding=10)
         frame.pack(fill=tk.X, padx=5, pady=5)
-        
+
         # Напряжение
         v_frame = ttk.Frame(frame)
         v_frame.pack(fill=tk.X, pady=3)
-        
-        ttk.Label(v_frame, text="Напряжение (V):", width=15).pack(side=tk.LEFT)
-        self.voltage_spinbox = ttk.Spinbox(v_frame, textvariable=self.voltage_set_var, 
+
+        ttk.Label(v_frame, text=self.lang.t("control_panel.voltage"), width=15).pack(side=tk.LEFT)
+        self.voltage_spinbox = ttk.Spinbox(v_frame, textvariable=self.voltage_set_var,
                                             from_=0, to=60, increment=0.1, width=8,
                                             command=self._on_voltage_spinbox)
         self.voltage_spinbox.pack(side=tk.LEFT, padx=5)
         self.voltage_spinbox.bind('<FocusIn>', self._on_entry_focus_in)
         self.voltage_spinbox.bind('<FocusOut>', self._on_entry_focus_out)
         self.voltage_spinbox.bind('<Return>', lambda e: self._set_voltage())
-        ttk.Button(v_frame, text="SET", command=self._set_voltage, width=5).pack(side=tk.LEFT)
-        
+        ttk.Button(v_frame, text=self.lang.t("control_panel.set_button"), command=self._set_voltage, width=5).pack(side=tk.LEFT)
+
         # Ползунок напряжения
         v_scale_frame = ttk.Frame(frame)
         v_scale_frame.pack(fill=tk.X, pady=2)
@@ -398,12 +404,12 @@ class FnirsiGUI:
         self.voltage_scale.pack(fill=tk.X, side=tk.LEFT, expand=True)
         self.voltage_scale.bind('<ButtonPress-1>', self._on_scale_press)
         self.voltage_scale.bind('<ButtonRelease-1>', self._on_scale_release_voltage)
-        
+
         # Ток
         a_frame = ttk.Frame(frame)
         a_frame.pack(fill=tk.X, pady=3)
-        
-        ttk.Label(a_frame, text="Ток (A):", width=15).pack(side=tk.LEFT)
+
+        ttk.Label(a_frame, text=self.lang.t("control_panel.current"), width=15).pack(side=tk.LEFT)
         self.current_spinbox = ttk.Spinbox(a_frame, textvariable=self.current_set_var,
                                             from_=0, to=20, increment=0.1, width=8,
                                             command=self._on_current_spinbox)
@@ -411,8 +417,8 @@ class FnirsiGUI:
         self.current_spinbox.bind('<FocusIn>', self._on_entry_focus_in)
         self.current_spinbox.bind('<FocusOut>', self._on_entry_focus_out)
         self.current_spinbox.bind('<Return>', lambda e: self._set_current())
-        ttk.Button(a_frame, text="SET", command=self._set_current, width=5).pack(side=tk.LEFT)
-        
+        ttk.Button(a_frame, text=self.lang.t("control_panel.set_button"), command=self._set_current, width=5).pack(side=tk.LEFT)
+
         # Ползунок тока
         a_scale_frame = ttk.Frame(frame)
         a_scale_frame.pack(fill=tk.X, pady=2)
@@ -421,77 +427,77 @@ class FnirsiGUI:
         self.current_scale.pack(fill=tk.X, side=tk.LEFT, expand=True)
         self.current_scale.bind('<ButtonPress-1>', self._on_scale_press)
         self.current_scale.bind('<ButtonRelease-1>', self._on_scale_release_current)
-        
+
         # Кнопка выхода
-        self.output_btn = tk.Button(frame, text="ВЫХОД ВЫКЛ", bg="#cc0000", fg="white",
+        self.output_btn = tk.Button(frame, text=self.lang.t("control_panel.output_off"), bg="#cc0000", fg="white",
                                      font=("Arial", 14, "bold"), height=2,
                                      command=self._toggle_output)
         self.output_btn.pack(fill=tk.X, pady=10)
     
     def _create_readings_panel(self, parent):
-        frame = ttk.LabelFrame(parent, text="Показания", padding=10)
+        frame = ttk.LabelFrame(parent, text=self.lang.t("readings_panel.title"), padding=10)
         frame.pack(fill=tk.X, padx=5, pady=5)
-        
+
         # Большие цифры для V, A, W
         readings_frame = ttk.Frame(frame)
         readings_frame.pack(fill=tk.X)
-        
+
         # Напряжение
         v_label = ttk.Label(readings_frame, textvariable=self.voltage_read_var,
                             font=("Courier", 24, "bold"), foreground="#00aa00")
         v_label.pack(fill=tk.X)
-        
+
         # Ток
         a_label = ttk.Label(readings_frame, textvariable=self.current_read_var,
                             font=("Courier", 24, "bold"), foreground="#0066cc")
         a_label.pack(fill=tk.X)
-        
+
         # Мощность
         w_label = ttk.Label(readings_frame, textvariable=self.power_read_var,
                             font=("Courier", 24, "bold"), foreground="#cc6600")
         w_label.pack(fill=tk.X)
-        
+
         # Дополнительная информация
         info_frame = ttk.Frame(frame)
         info_frame.pack(fill=tk.X, pady=10)
-        
-        ttk.Label(info_frame, text="Температура:").grid(row=0, column=0, sticky=tk.W)
+
+        ttk.Label(info_frame, text=self.lang.t("readings_panel.temperature")).grid(row=0, column=0, sticky=tk.W)
         ttk.Label(info_frame, textvariable=self.temperature_var).grid(row=0, column=1, sticky=tk.E)
-        
-        ttk.Label(info_frame, text="Ёмкость:").grid(row=1, column=0, sticky=tk.W)
+
+        ttk.Label(info_frame, text=self.lang.t("readings_panel.capacity")).grid(row=1, column=0, sticky=tk.W)
         ttk.Label(info_frame, textvariable=self.capacity_ah_var).grid(row=1, column=1, sticky=tk.E)
-        
-        ttk.Label(info_frame, text="Энергия:").grid(row=2, column=0, sticky=tk.W)
+
+        ttk.Label(info_frame, text=self.lang.t("readings_panel.energy")).grid(row=2, column=0, sticky=tk.W)
         ttk.Label(info_frame, textvariable=self.capacity_wh_var).grid(row=2, column=1, sticky=tk.E)
-        
-        ttk.Label(info_frame, text="Режим:").grid(row=3, column=0, sticky=tk.W)
+
+        ttk.Label(info_frame, text=self.lang.t("readings_panel.mode")).grid(row=3, column=0, sticky=tk.W)
         self.mode_label = ttk.Label(info_frame, textvariable=self.mode_var, font=("Arial", 10, "bold"))
         self.mode_label.grid(row=3, column=1, sticky=tk.E)
-        
-        ttk.Label(info_frame, text="Защита:").grid(row=4, column=0, sticky=tk.W)
+
+        ttk.Label(info_frame, text=self.lang.t("readings_panel.protection")).grid(row=4, column=0, sticky=tk.W)
         self.protection_label = ttk.Label(info_frame, textvariable=self.protection_var,
                                            font=("Arial", 10, "bold"))
         self.protection_label.grid(row=4, column=1, sticky=tk.E)
-        
+
         info_frame.columnconfigure(1, weight=1)
-        
+
         # Яркость дисплея (0-35)
-        brightness_frame = ttk.LabelFrame(frame, text="Яркость дисплея", padding=5)
+        brightness_frame = ttk.LabelFrame(frame, text=self.lang.t("readings_panel.brightness_title"), padding=5)
         brightness_frame.pack(fill=tk.X, pady=5)
-        
+
         self.brightness_var = tk.IntVar(value=20)
-        self.brightness_spinbox = ttk.Spinbox(brightness_frame, from_=0, to=20, 
+        self.brightness_spinbox = ttk.Spinbox(brightness_frame, from_=0, to=20,
                                                textvariable=self.brightness_var,
                                                width=5, command=self._on_brightness_change)
         self.brightness_spinbox.pack(side=tk.LEFT, padx=5)
         self.brightness_spinbox.bind('<Return>', lambda e: self._on_brightness_change())
-        
-        ttk.Label(brightness_frame, text="(0-20)").pack(side=tk.LEFT)
+
+        ttk.Label(brightness_frame, text=self.lang.t("readings_panel.brightness_range")).pack(side=tk.LEFT)
     
     def _create_presets_panel(self, parent):
-        frame = ttk.LabelFrame(parent, text="Пресеты", padding=10)
+        frame = ttk.LabelFrame(parent, text=self.lang.t("presets_panel.title"), padding=10)
         frame.pack(fill=tk.X, padx=5, pady=5)
-        
+
         # Загрузка пресетов из конфига
         self.preset_buttons = []
         default_presets = [
@@ -505,26 +511,26 @@ class FnirsiGUI:
             {"name": "16.8V/5A", "voltage": 16.8, "current": 5.0},
             {"name": "24V/8A", "voltage": 24.0, "current": 8.0},
         ]
-        
+
         self.presets = self.settings.get('presets', default_presets)
         # Убедимся что 9 пресетов
         while len(self.presets) < 9:
             idx = len(self.presets) + 1
             self.presets.append({"name": f"P{idx}", "voltage": 5.0, "current": 1.0})
-        
+
         # Создание кнопок 3x3
         for i in range(9):
             row, col = divmod(i, 3)
             preset = self.presets[i]
-            btn = ttk.Button(frame, text=preset.get('name', f'{preset["voltage"]}V/{preset["current"]}A'), 
+            btn = ttk.Button(frame, text=preset.get('name', f'{preset["voltage"]}V/{preset["current"]}A'),
                             width=10)
             btn.grid(row=row, column=col, padx=2, pady=2, sticky='ew')
             btn.bind('<Button-1>', lambda e, idx=i: self._apply_preset_by_index(idx))
             btn.bind('<Button-3>', lambda e, idx=i: self._edit_preset(idx))
             self.preset_buttons.append(btn)
-        
+
         # Подсказка
-        ttk.Label(frame, text="ЛКМ - применить, ПКМ - настроить", 
+        ttk.Label(frame, text=self.lang.t("presets_panel.hint"),
                  font=("Arial", 8)).grid(row=3, column=0, columnspan=3, pady=(5,0))
     
     def _apply_preset_by_index(self, idx: int):
@@ -537,46 +543,46 @@ class FnirsiGUI:
         """Редактировать пресет."""
         if idx < 0 or idx >= len(self.presets):
             return
-        
+
         preset = self.presets[idx]
-        
+
         # Диалоговое окно редактирования
         dialog = tk.Toplevel(self.root)
-        dialog.title(f"Редактирование пресета {idx + 1}")
+        dialog.title(f"{self.lang.t('presets_panel.edit_title')} {idx + 1}")
         dialog.geometry("280x180")
         dialog.resizable(False, False)
         dialog.transient(self.root)
         dialog.grab_set()
-        
+
         # Центрирование
         dialog.update_idletasks()
         x = self.root.winfo_x() + (self.root.winfo_width() - 280) // 2
         y = self.root.winfo_y() + (self.root.winfo_height() - 180) // 2
         dialog.geometry(f"+{x}+{y}")
-        
+
         main_frame = ttk.Frame(dialog, padding=15)
         main_frame.pack(fill=tk.BOTH, expand=True)
-        
+
         # Название
-        ttk.Label(main_frame, text="Название:").grid(row=0, column=0, sticky='w', pady=5)
+        ttk.Label(main_frame, text=self.lang.t("presets_panel.name")).grid(row=0, column=0, sticky='w', pady=5)
         name_var = tk.StringVar(value=preset.get('name', ''))
         name_entry = ttk.Entry(main_frame, textvariable=name_var, width=15)
         name_entry.grid(row=0, column=1, sticky='ew', pady=5)
-        
+
         # Напряжение
-        ttk.Label(main_frame, text="Напряжение (V):").grid(row=1, column=0, sticky='w', pady=5)
+        ttk.Label(main_frame, text=self.lang.t("presets_panel.voltage")).grid(row=1, column=0, sticky='w', pady=5)
         voltage_var = tk.DoubleVar(value=preset['voltage'])
-        voltage_spin = ttk.Spinbox(main_frame, from_=0, to=36, increment=0.1, 
+        voltage_spin = ttk.Spinbox(main_frame, from_=0, to=36, increment=0.1,
                                    textvariable=voltage_var, width=10)
         voltage_spin.grid(row=1, column=1, sticky='ew', pady=5)
-        
+
         # Ток
-        ttk.Label(main_frame, text="Ток (A):").grid(row=2, column=0, sticky='w', pady=5)
+        ttk.Label(main_frame, text=self.lang.t("presets_panel.current")).grid(row=2, column=0, sticky='w', pady=5)
         current_var = tk.DoubleVar(value=preset['current'])
         current_spin = ttk.Spinbox(main_frame, from_=0, to=10, increment=0.1,
                                    textvariable=current_var, width=10)
         current_spin.grid(row=2, column=1, sticky='ew', pady=5)
-        
+
         def save_preset():
             self.presets[idx] = {
                 'name': name_var.get() or f'{voltage_var.get():.1f}V/{current_var.get():.1f}A',
@@ -589,16 +595,16 @@ class FnirsiGUI:
             self.settings['presets'] = self.presets
             self._save_settings()
             dialog.destroy()
-        
+
         # Кнопки
         btn_frame = ttk.Frame(main_frame)
         btn_frame.grid(row=3, column=0, columnspan=2, pady=15)
-        ttk.Button(btn_frame, text="Сохранить", command=save_preset).pack(side=tk.LEFT, padx=5)
-        ttk.Button(btn_frame, text="Отмена", command=dialog.destroy).pack(side=tk.LEFT, padx=5)
+        ttk.Button(btn_frame, text=self.lang.t("presets_panel.save"), command=save_preset).pack(side=tk.LEFT, padx=5)
+        ttk.Button(btn_frame, text=self.lang.t("presets_panel.cancel"), command=dialog.destroy).pack(side=tk.LEFT, padx=5)
     
     def _create_charts_panel(self, parent):
         if not MATPLOTLIB_AVAILABLE:
-            ttk.Label(parent, text="Графики недоступны.\nУстановите matplotlib: pip install matplotlib",
+            ttk.Label(parent, text=self.lang.t("matplotlib_warning"),
                      font=("Arial", 14)).pack(expand=True)
             return
         
@@ -613,18 +619,18 @@ class FnirsiGUI:
         self.ax_temp = self.fig.add_subplot(414)
         
         # Настройка графиков
-        for ax, label, color in [
-            (self.ax_voltage, "Voltage (V)", "#00aa00"),
-            (self.ax_current, "Current (A)", "#0066cc"),
-            (self.ax_power, "Power (W)", "#cc6600"),
-            (self.ax_temp, "Temperature (°C)", "#cc0066")
+        for ax, label_key, color in [
+            (self.ax_voltage, "charts.voltage", "#00aa00"),
+            (self.ax_current, "charts.current", "#0066cc"),
+            (self.ax_power, "charts.power", "#cc6600"),
+            (self.ax_temp, "charts.temperature", "#cc0066")
         ]:
-            ax.set_ylabel(label, fontsize=9)
+            ax.set_ylabel(self.lang.t(label_key), fontsize=9)
             ax.tick_params(labelsize=8)
             ax.grid(self.settings.get('show_grid', True), alpha=0.3)
             ax.set_facecolor('#ffffff')
-        
-        self.ax_temp.set_xlabel("Time (s)", fontsize=9)
+
+        self.ax_temp.set_xlabel(self.lang.t("charts.time"), fontsize=9)
         
         self.fig.tight_layout()
         
@@ -649,13 +655,13 @@ class FnirsiGUI:
     def _create_status_bar(self):
         status_frame = ttk.Frame(self.root)
         status_frame.pack(fill=tk.X, side=tk.BOTTOM)
-        
-        self.status_label = ttk.Label(status_frame, text="Готов к работе", relief=tk.SUNKEN)
+
+        self.status_label = ttk.Label(status_frame, text=self.lang.t("status.ready"), relief=tk.SUNKEN)
         self.status_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        
-        self.packets_label = ttk.Label(status_frame, text="Пакетов: 0", width=15, relief=tk.SUNKEN)
+
+        self.packets_label = ttk.Label(status_frame, text=self.lang.t("status.packets", count=0), width=15, relief=tk.SUNKEN)
         self.packets_label.pack(side=tk.RIGHT)
-        
+
         self.recording_label = ttk.Label(status_frame, text="", width=10, relief=tk.SUNKEN)
         self.recording_label.pack(side=tk.RIGHT)
     
@@ -673,48 +679,48 @@ class FnirsiGUI:
     def _connect(self):
         port = self.port_var.get()
         if not port:
-            messagebox.showwarning("Предупреждение", "Выберите COM-порт")
+            messagebox.showwarning(self.lang.t("messages.warning"), self.lang.t("messages.select_port"))
             return
-        
-        self.status_label.config(text=f"Подключение к {port}...")
+
+        self.status_label.config(text=self.lang.t("status.connecting", port=port))
         self.root.update()
-        
+
         baud = self.settings.get('baud_rate', 9600)
         timeout = self.settings.get('timeout', 2.0)
-        
+
         if self.psu.connect(port, baud, timeout):
             self.connected = True
             self.settings['last_port'] = port
             self._save_settings()
-            
+
             self._update_status_indicator(True)
             self.connect_btn.config(state=tk.DISABLED)
             self.disconnect_btn.config(state=tk.NORMAL)
-            self.status_label.config(text=f"Подключено к {port}")
-            
+            self.status_label.config(text=self.lang.t("status.connected", port=port))
+
             # Обновить лимиты слайдеров
             state = self.psu.state
             if state.max_voltage > 0:
                 self.voltage_scale.config(to=state.max_voltage)
             if state.max_current > 0:
                 self.current_scale.config(to=state.max_current)
-            
+
             self.model_var.set(state.model or "FNIRSI")
             self.firmware_var.set(state.firmware)
-            
+
             self.chart_data.clear()
         else:
-            messagebox.showerror("Ошибка", f"Не удалось подключиться к {port}")
-            self.status_label.config(text="Ошибка подключения")
+            messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.connection_failed", port=port))
+            self.status_label.config(text=self.lang.t("status.connection_error"))
     
     def _disconnect(self):
         self.psu.disconnect()
         self.connected = False
-        
+
         self._update_status_indicator(False)
         self.connect_btn.config(state=tk.NORMAL)
         self.disconnect_btn.config(state=tk.DISABLED)
-        self.status_label.config(text="Отключено")
+        self.status_label.config(text=self.lang.t("status.disconnected"))
         self.model_var.set("--")
     
     def _set_voltage(self):
@@ -724,8 +730,8 @@ class FnirsiGUI:
                 self.psu.set_voltage(voltage)
                 self.voltage_scale.set(voltage)
         except ValueError:
-            messagebox.showerror("Ошибка", "Неверное значение напряжения")
-    
+            messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.invalid_voltage"))
+
     def _set_current(self):
         try:
             current = float(self.current_set_var.get())
@@ -733,7 +739,7 @@ class FnirsiGUI:
                 self.psu.set_current(current)
                 self.current_scale.set(current)
         except ValueError:
-            messagebox.showerror("Ошибка", "Неверное значение тока")
+            messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.invalid_current"))
     
     def _on_entry_focus_in(self, event):
         """Начало редактирования - блокируем обновление"""
@@ -807,15 +813,15 @@ class FnirsiGUI:
     def _toggle_output(self):
         if not self.connected:
             return
-        
+
         if self.output_var.get():
             self.psu.output_off()
             self.output_var.set(False)
-            self.output_btn.config(text="ВЫХОД ВЫКЛ", bg="#cc0000")
+            self.output_btn.config(text=self.lang.t("control_panel.output_off"), bg="#cc0000")
         else:
             self.psu.output_on()
             self.output_var.set(True)
-            self.output_btn.config(text="ВЫХОД ВКЛ", bg="#00cc00")
+            self.output_btn.config(text=self.lang.t("control_panel.output_on"), bg="#00cc00")
     
     def _apply_preset(self, voltage: float, current: float):
         if self.connected:
@@ -855,16 +861,16 @@ class FnirsiGUI:
             # Обновить кнопку выхода
             self.output_var.set(state.output_enabled)
             if state.output_enabled:
-                self.output_btn.config(text="ВЫХОД ВКЛ", bg="#00cc00")
+                self.output_btn.config(text=self.lang.t("control_panel.output_on"), bg="#00cc00")
             else:
-                self.output_btn.config(text="ВЫХОД ВЫКЛ", bg="#cc0000")
-            
+                self.output_btn.config(text=self.lang.t("control_panel.output_off"), bg="#cc0000")
+
             # Цвет защиты
             if state.protection_str != "OK":
                 self.protection_label.config(foreground="red")
             else:
                 self.protection_label.config(foreground="green")
-            
+
             # Добавить точку на график
             self.chart_data.add_point(
                 state.output_voltage,
@@ -872,7 +878,7 @@ class FnirsiGUI:
                 state.output_power,
                 state.temperature
             )
-            
+
             # Запись данных
             if self.recording:
                 self.recorded_data.append({
@@ -882,9 +888,9 @@ class FnirsiGUI:
                     'power': state.output_power,
                     'temperature': state.temperature
                 })
-            
+
             # Обновить счётчик пакетов
-            self.packets_label.config(text=f"Пакетов: {state.packet_count}")
+            self.packets_label.config(text=self.lang.t("status.packets", count=state.packet_count))
             
             # Обновить графики
             self._update_charts()
@@ -938,75 +944,72 @@ class FnirsiGUI:
         self.recording = not self.recording
         if self.recording:
             self.recorded_data = []
-            self.recording_label.config(text="● REC", foreground="red")
+            self.recording_label.config(text=self.lang.t("status.recording"), foreground="red")
         else:
             self.recording_label.config(text="")
-    
+
     def _export_data(self):
         if not self.recorded_data:
-            messagebox.showinfo("Информация", "Нет записанных данных")
+            messagebox.showinfo(self.lang.t("messages.info"), self.lang.t("messages.no_data"))
             return
-        
+
         filename = filedialog.asksaveasfilename(
             defaultextension=".csv",
             filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
         )
-        
+
         if filename:
             try:
                 with open(filename, 'w', newline='') as f:
                     writer = csv.DictWriter(f, fieldnames=['timestamp', 'voltage', 'current', 'power', 'temperature'])
                     writer.writeheader()
                     writer.writerows(self.recorded_data)
-                messagebox.showinfo("Успех", f"Данные экспортированы в {filename}")
+                messagebox.showinfo(self.lang.t("messages.success"), self.lang.t("messages.export_success", filename=filename))
             except Exception as e:
-                messagebox.showerror("Ошибка", f"Не удалось сохранить файл: {e}")
-    
+                messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.export_error", error=str(e)))
+
     def _save_screenshot(self):
         if not MATPLOTLIB_AVAILABLE:
             return
-        
+
         filename = filedialog.asksaveasfilename(
             defaultextension=".png",
             filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
         )
-        
+
         if filename:
             try:
                 self.fig.savefig(filename, dpi=150, bbox_inches='tight')
-                messagebox.showinfo("Успех", f"Скриншот сохранён в {filename}")
+                messagebox.showinfo(self.lang.t("messages.success"), self.lang.t("messages.screenshot_success", filename=filename))
             except Exception as e:
-                messagebox.showerror("Ошибка", f"Не удалось сохранить: {e}")
-    
+                messagebox.showerror(self.lang.t("messages.error"), self.lang.t("messages.screenshot_error", error=str(e)))
+
     def _show_settings(self):
-        dialog = SettingsDialog(self.root, self.settings)
+        dialog = SettingsDialog(self.root, self.settings, self.lang)
         self.root.wait_window(dialog)
-        
+
         if dialog.result:
+            old_lang = self.settings.get('language', 'en')
             self.settings.update(dialog.result)
             self._save_settings()
-            
+
             # Применить новые настройки
             self.chart_data.max_points = self.settings['max_chart_points']
-            
+
             if MATPLOTLIB_AVAILABLE:
                 for ax in [self.ax_voltage, self.ax_current, self.ax_power, self.ax_temp]:
                     ax.grid(self.settings['show_grid'], alpha=0.3)
                 self.canvas.draw_idle()
-    
+
+            # Если язык изменился, перезагрузить интерфейс
+            if self.settings.get('language') != old_lang:
+                self.lang.set_language(self.settings['language'])
+                messagebox.showinfo(self.lang.t("messages.info"),
+                                  "Please restart the application to apply language changes.\n"
+                                  "Пожалуйста, перезапустите приложение для применения языка.")
+
     def _show_about(self):
-        about_text = """FNIRSI Power Supply Control
-
-Графический интерфейс для управления
-лабораторными источниками питания FNIRSI.
-
-Версия: 1.0
-Автор: ALEXGAVS
-
-© 2024-2026 ALEXGAVS
-Использование без указания авторства запрещено.
-"""
-        messagebox.showinfo("О программе", about_text)
+        messagebox.showinfo(self.lang.t("menu.about"), self.lang.t("about.text"))
     
     def _on_close(self):
         if self.connected:

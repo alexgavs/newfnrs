@@ -9,6 +9,24 @@
 
 **EN:** Complete Python library for controlling FNIRSI laboratory power supplies via USB/Serial interface.
 
+---
+
+### 📸 Скриншоты / Screenshots
+
+#### Главное окно / Main Window
+![FNIRSI GUI - Main Window](docs/screenshot-main-ru.png)
+*Графический интерфейс с графиками в реальном времени и управлением*
+
+*Graphical interface with real-time charts and controls*
+
+#### Настройки / Settings
+![FNIRSI GUI - Settings Dialog](docs/screenshot-settings-ru.png)
+*Диалог настроек с выбором языка (English/Русский)*
+
+*Settings dialog with language selection (English/Russian)*
+
+---
+
 ## Возможности / Features
 
 - 🔌 Подключение и управление через COM-порт
@@ -17,7 +35,9 @@
 - 🎛️ Включение/выключение выхода
 - 🛡️ Отображение статуса защит (OVP, OCP, OPP, OTP, SCP)
 - 📈 Отслеживание ёмкости (Ah, Wh)
+- 🖥️ Графический интерфейс (GUI) с графиками в реальном времени
 - 💻 Интерактивный CLI интерфейс
+- 🌍 **Мультиязычность** (English, Русский) с возможностью редактирования переводов
 - 🔧 Низкоуровневый доступ к протоколу
 
 ## Поддерживаемые устройства / Supported Devices
@@ -110,6 +130,33 @@ Checksum = (register + length + sum(data)) & 0xFF
 
 📖 **Подробная документация протокола:** [PROTOCOL.md](PROTOCOL.md)
 
+## Мультиязычность / Multi-language Support
+
+Приложение поддерживает несколько языков с возможностью редактирования пользователем.
+
+The application supports multiple languages with user-editable translations.
+
+**Доступные языки / Available languages:**
+- 🇬🇧 English (по умолчанию / default)
+- 🇷🇺 Русский
+
+**Смена языка / Changing language:**
+1. Откройте GUI → **Tools → Settings** → **Interface** → **Language**
+2. Выберите язык / Select language
+3. Перезапустите приложение / Restart application
+
+**Редактирование переводов / Editing translations:**
+
+Файлы переводов находятся в папке `lang/`:
+- `lang/en.json` - English
+- `lang/ru.json` - Русский
+
+Вы можете редактировать эти JSON файлы для настройки текста интерфейса.
+
+You can edit these JSON files to customize interface text.
+
+📖 **Подробная инструкция:** [lang/README.md](lang/README.md)
+
 ## Структура проекта / Project Structure
 
 | Файл | Описание |
@@ -119,8 +166,10 @@ Checksum = (register + length + sum(data)) & 0xFF
 | `protocol.py` | Реализация протокола / Protocol implementation |
 | `gui.py` | 🖥️ Графический интерфейс с графиками / GUI with charts |
 | `cli.py` | Интерактивный CLI / Interactive CLI |
+| `language_manager.py` | 🌍 Менеджер переводов / Translation manager |
 | `serial_port.py` | Работа с COM-портом / COM port handling |
 | `config.json` | ⚙️ Конфигурация и пресеты / Config and presets |
+| `lang/` | 📁 Языковые файлы / Language files |
 | `scan_ports.py` | Сканирование портов / Port scanning |
 | `examples.py` | Примеры использования / Usage examples |
 

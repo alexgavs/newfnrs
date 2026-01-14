@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(python language_manager.py:*)",
+      "Bash(python:*)"
+    ]
+  }
+}
